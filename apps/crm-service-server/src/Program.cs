@@ -1,5 +1,6 @@
 using System.Reflection;
 using CrmService;
+using CrmService.Brokers.Mymessagebroker;
 using CrmService.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,7 @@ builder.Services.AddCors(builder =>
 builder.Services.AddDbContext<CrmServiceDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+builder.AddMymessagebroker();
 var app = builder.Build();
 
 app.UseCors();
