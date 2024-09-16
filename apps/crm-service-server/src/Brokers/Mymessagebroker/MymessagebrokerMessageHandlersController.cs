@@ -12,4 +12,12 @@ public class MymessagebrokerMessageHandlersController
 
         return Task.CompletedTask;
     }
+
+    [Topic("updateblog")]
+    public Task HandleUpdateblog(string message)
+    {
+        //set your message handling logic here
+
+        return Task.CompletedTask;
+    }
 }
