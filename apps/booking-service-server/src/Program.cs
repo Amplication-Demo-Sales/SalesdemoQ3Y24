@@ -1,5 +1,6 @@
 using System.Reflection;
 using BookingService;
+using BookingService.Brokers.Mymessagebroker;
 using BookingService.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,7 @@ builder.Services.AddCors(builder =>
 builder.Services.AddDbContext<BookingServiceDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+builder.AddMymessagebroker();
 var app = builder.Build();
 
 app.UseCors();
