@@ -28,7 +28,7 @@ builder.Services.AddCors(builder =>
     );
 });
 builder.Services.AddDbContext<BookingServiceDbContext>(opt =>
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 var app = builder.Build();
 
