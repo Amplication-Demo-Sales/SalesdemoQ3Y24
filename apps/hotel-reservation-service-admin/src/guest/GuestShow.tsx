@@ -29,7 +29,7 @@ export const GuestShow = (props: ShowProps): React.ReactElement => {
           target="guestId"
           label="Bookings"
         >
-          <Datagrid rowClick="show">
+          <Datagrid rowClick="show" bulkActionButtons={false}>
             <TextField label="CheckInDate" source="checkInDate" />
             <TextField label="CheckOutDate" source="checkOutDate" />
             <DateField source="createdAt" label="Created At" />

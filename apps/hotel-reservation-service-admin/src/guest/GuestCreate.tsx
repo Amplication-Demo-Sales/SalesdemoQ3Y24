@@ -15,13 +15,12 @@ export const GuestCreate = (props: CreateProps): React.ReactElement => {
   return (
     <Create {...props}>
       <SimpleForm>
-        <ReferenceArrayInput
-          source="bookings"
-          reference="Booking"
-          parse={(value: any) => value && value.map((v: any) => ({ id: v }))}
-          format={(value: any) => value && value.map((v: any) => v.id)}
-        >
-          <SelectArrayInput optionText={BookingTitle} />
+        <ReferenceArrayInput source="bookings" reference="Booking">
+          <SelectArrayInput
+            optionText={BookingTitle}
+            parse={(value: any) => value && value.map((v: any) => ({ id: v }))}
+            format={(value: any) => value && value.map((v: any) => v.id)}
+          />
         </ReferenceArrayInput>
         <TextInput label="ContactInfo" source="contactInfo" />
         <TextInput label="Name" source="name" />
