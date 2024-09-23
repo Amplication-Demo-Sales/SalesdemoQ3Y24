@@ -14,12 +14,11 @@ export const CommentList = (props: ListProps): React.ReactElement => {
   return (
     <List
       {...props}
-      bulkActionButtons={false}
       title={"Comments"}
       perPage={50}
       pagination={<Pagination />}
     >
-      <Datagrid rowClick="show">
+      <Datagrid rowClick="show" bulkActionButtons={false}>
         <TextField label="Author" source="author" />
         <TextField label="Content" source="content" />
         <DateField source="createdAt" label="Created At" />
@@ -27,7 +26,7 @@ export const CommentList = (props: ListProps): React.ReactElement => {
         <ReferenceField label="Post" source="post.id" reference="Post">
           <TextField source={POST_TITLE_FIELD} />
         </ReferenceField>
-        <DateField source="updatedAt" label="Updated At" />
+        <DateField source="updatedAt" label="Updated At" />{" "}
       </Datagrid>
     </List>
   );
