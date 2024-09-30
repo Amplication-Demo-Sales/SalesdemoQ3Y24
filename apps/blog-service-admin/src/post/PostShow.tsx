@@ -28,7 +28,7 @@ export const PostShow = (props: ShowProps): React.ReactElement => {
           target="postId"
           label="Comments"
         >
-          <Datagrid rowClick="show">
+          <Datagrid rowClick="show" bulkActionButtons={false}>
             <TextField label="Author" source="author" />
             <TextField label="Content" source="content" />
             <DateField source="createdAt" label="Created At" />

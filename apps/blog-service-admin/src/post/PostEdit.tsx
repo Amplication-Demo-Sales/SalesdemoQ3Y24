@@ -16,13 +16,12 @@ export const PostEdit = (props: EditProps): React.ReactElement => {
     <Edit {...props}>
       <SimpleForm>
         <TextInput label="Author" source="author" />
-        <ReferenceArrayInput
-          source="comments"
-          reference="Comment"
-          parse={(value: any) => value && value.map((v: any) => ({ id: v }))}
-          format={(value: any) => value && value.map((v: any) => v.id)}
-        >
-          <SelectArrayInput optionText={CommentTitle} />
+        <ReferenceArrayInput source="comments" reference="Comment">
+          <SelectArrayInput
+            optionText={CommentTitle}
+            parse={(value: any) => value && value.map((v: any) => ({ id: v }))}
+            format={(value: any) => value && value.map((v: any) => v.id)}
+          />
         </ReferenceArrayInput>
         <TextInput label="Content" multiline source="content" />
         <TextInput label="Title" source="title" />
