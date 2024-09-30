@@ -32,6 +32,9 @@ builder.Services.AddDbContext<CrmServiceDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 builder.AddMymessagebroker();
+builder.Services.AddDbContext<CrmServiceDbContext>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 var app = builder.Build();
 
 app.UseCors();
