@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CarRentalManagement.Infrastructure.Models;
+namespace CarRentalManagementMobile.Infrastructure.Models;
 
 [Table("Products")]
 public class ProductDbModel
@@ -19,8 +19,13 @@ public class ProductDbModel
     [StringLength(1000)]
     public string? Name { get; set; }
 
+    public List<OrderItemDbModel>? OrderItems { get; set; } = new List<OrderItemDbModel>();
+
     [Range(-999999999, 999999999)]
     public double? Price { get; set; }
+
+    [Range(-999999999, 999999999)]
+    public int? Stock { get; set; }
 
     [Required()]
     public DateTime UpdatedAt { get; set; }

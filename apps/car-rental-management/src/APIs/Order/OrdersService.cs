@@ -1,9 +1,9 @@
-using CarRentalManagement.Infrastructure;
+using CarRentalManagementMobile.Infrastructure;
 
-namespace CarRentalManagement.APIs;
+namespace CarRentalManagementMobile.APIs;
 
 public class OrdersService : OrdersServiceBase
 {
-    public OrdersService(CarRentalManagementDbContext context)
+    public OrdersService(CarRentalManagementMobileDbContext context)
         : base(context) { }
 }

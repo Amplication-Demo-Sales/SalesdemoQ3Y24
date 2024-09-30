@@ -1,3 +1,3 @@
-namespace CarRentalManagement;
+namespace CarRentalManagementMobile;
 
 public class SeedDevelopmentData { }

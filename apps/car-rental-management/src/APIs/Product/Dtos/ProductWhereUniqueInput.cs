@@ -1,4 +1,4 @@
-namespace CarRentalManagement.APIs.Dtos;
+namespace CarRentalManagementMobile.APIs.Dtos;
 
 public class ProductWhereUniqueInput
 {

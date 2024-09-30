@@ -1,19 +1,19 @@
-using CarRentalManagement.APIs;
-using CarRentalManagement.APIs.Common;
-using CarRentalManagement.APIs.Dtos;
-using CarRentalManagement.APIs.Errors;
-using CarRentalManagement.APIs.Extensions;
-using CarRentalManagement.Infrastructure;
-using CarRentalManagement.Infrastructure.Models;
+using CarRentalManagementMobile.APIs;
+using CarRentalManagementMobile.APIs.Common;
+using CarRentalManagementMobile.APIs.Dtos;
+using CarRentalManagementMobile.APIs.Errors;
+using CarRentalManagementMobile.APIs.Extensions;
+using CarRentalManagementMobile.Infrastructure;
+using CarRentalManagementMobile.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarRentalManagement.APIs;
+namespace CarRentalManagementMobile.APIs;
 
 public abstract class OrdersServiceBase : IOrdersService
 {
-    protected readonly CarRentalManagementDbContext _context;
+    protected readonly CarRentalManagementMobileDbContext _context;
 
-    public OrdersServiceBase(CarRentalManagementDbContext context)
+    public OrdersServiceBase(CarRentalManagementMobileDbContext context)
     {
         _context = context;
     }
@@ -27,7 +27,8 @@ public abstract class OrdersServiceBase : IOrdersService
         {
             CreatedAt = createDto.CreatedAt,
             OrderDate = createDto.OrderDate,
-            TotalAmount = createDto.TotalAmount,
+            Status = createDto.Status,
+            Total = createDto.Total,
             UpdatedAt = createDto.UpdatedAt
         };
 
@@ -35,10 +36,10 @@ public abstract class OrdersServiceBase : IOrdersService
         {
             order.Id = createDto.Id;
         }
-        if (createDto.Customer != null)
+        if (createDto.OrderItem != null)
         {
-            order.Customer = await _context
-                .Customers.Where(customer => createDto.Customer.Id == customer.Id)
+            order.OrderItem = await _context
+                .OrderItems.Where(orderItem => createDto.OrderItem.Id == orderItem.Id)
                 .FirstOrDefaultAsync();
         }
 
@@ -76,7 +77,7 @@ public abstract class OrdersServiceBase : IOrdersService
     public async Task<List<Order>> Orders(OrderFindManyArgs findManyArgs)
     {
         var orders = await _context
-            .Orders.Include(x => x.Customer)
+            .Orders.Include(x => x.OrderItem)
             .ApplyWhere(findManyArgs.Where)
             .ApplySkip(findManyArgs.Skip)
             .ApplyTake(findManyArgs.Take)
@@ -119,10 +120,10 @@ public abstract class OrdersServiceBase : IOrdersService
     {
         var order = updateDto.ToModel(uniqueId);
 
-        if (updateDto.Customer != null)
+        if (updateDto.OrderItem != null)
         {
-            order.Customer = await _context
-                .Customers.Where(customer => updateDto.Customer == customer.Id)
+            order.OrderItem = await _context
+                .OrderItems.Where(orderItem => updateDto.OrderItem == orderItem.Id)
                 .FirstOrDefaultAsync();
         }
 
@@ -146,18 +147,18 @@ public abstract class OrdersServiceBase : IOrdersService
     }
 
     /// <summary>
-    /// Get a Customer record for Order
+    /// Get a OrderItem record for Order
     /// </summary>
-    public async Task<Customer> GetCustomer(OrderWhereUniqueInput uniqueId)
+    public async Task<OrderItem> GetOrderItem(OrderWhereUniqueInput uniqueId)
     {
         var order = await _context
             .Orders.Where(order => order.Id == uniqueId.Id)
-            .Include(order => order.Customer)
+            .Include(order => order.OrderItem)
             .FirstOrDefaultAsync();
         if (order == null)
         {
             throw new NotFoundException();
         }
-        return order.Customer.ToDto();
+        return order.OrderItem.ToDto();
     }
 }

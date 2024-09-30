@@ -1,10 +1,10 @@
-using CarRentalManagement.APIs;
-using CarRentalManagement.APIs.Common;
-using CarRentalManagement.APIs.Dtos;
-using CarRentalManagement.APIs.Errors;
+using CarRentalManagementMobile.APIs;
+using CarRentalManagementMobile.APIs.Common;
+using CarRentalManagementMobile.APIs.Dtos;
+using CarRentalManagementMobile.APIs.Errors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CarRentalManagement.APIs;
+namespace CarRentalManagementMobile.APIs;
 
 [Route("api/[controller]")]
 [ApiController()]
@@ -99,5 +99,15 @@ public abstract class UsersControllerBase : ControllerBase
         }
 
         return NoContent();
+    }
+
+    /// <summary>
+    /// Get a Role record for User
+    /// </summary>
+    [HttpGet("{Id}/role")]
+    public async Task<ActionResult<List<Role>>> GetRole([FromRoute()] UserWhereUniqueInput uniqueId)
+    {
+        var role = await _service.GetRole(uniqueId);
+        return Ok(role);
     }
 }

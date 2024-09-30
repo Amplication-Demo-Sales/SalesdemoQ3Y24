@@ -1,6 +1,6 @@
-using CarRentalManagement.APIs.Common.Attributes;
+using CarRentalManagementMobile.APIs.Common.Attributes;
 
-namespace CarRentalManagement.APIs.Common;
+namespace CarRentalManagementMobile.APIs.Common;
 
 public abstract class FindManyInput<M, W> : PaginationInput, IFindManyInput<M, W>
     where W : class

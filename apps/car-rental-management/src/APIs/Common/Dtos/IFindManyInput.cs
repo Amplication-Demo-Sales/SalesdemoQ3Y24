@@ -1,4 +1,4 @@
-namespace CarRentalManagement.APIs.Common;
+namespace CarRentalManagementMobile.APIs.Common;
 
 public interface IFindManyInput<M, W>
 {

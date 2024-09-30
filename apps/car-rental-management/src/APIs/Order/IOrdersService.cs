@@ -1,7 +1,7 @@
-using CarRentalManagement.APIs.Common;
-using CarRentalManagement.APIs.Dtos;
+using CarRentalManagementMobile.APIs.Common;
+using CarRentalManagementMobile.APIs.Dtos;
 
-namespace CarRentalManagement.APIs;
+namespace CarRentalManagementMobile.APIs;
 
 public interface IOrdersService
 {
@@ -36,7 +36,7 @@ public interface IOrdersService
     public Task UpdateOrder(OrderWhereUniqueInput uniqueId, OrderUpdateInput updateDto);
 
     /// <summary>
-    /// Get a Customer record for Order
+    /// Get a OrderItem record for Order
     /// </summary>
-    public Task<Customer> GetCustomer(OrderWhereUniqueInput uniqueId);
+    public Task<OrderItem> GetOrderItem(OrderWhereUniqueInput uniqueId);
 }

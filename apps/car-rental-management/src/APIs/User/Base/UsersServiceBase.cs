@@ -1,19 +1,19 @@
-using CarRentalManagement.APIs;
-using CarRentalManagement.APIs.Common;
-using CarRentalManagement.APIs.Dtos;
-using CarRentalManagement.APIs.Errors;
-using CarRentalManagement.APIs.Extensions;
-using CarRentalManagement.Infrastructure;
-using CarRentalManagement.Infrastructure.Models;
+using CarRentalManagementMobile.APIs;
+using CarRentalManagementMobile.APIs.Common;
+using CarRentalManagementMobile.APIs.Dtos;
+using CarRentalManagementMobile.APIs.Errors;
+using CarRentalManagementMobile.APIs.Extensions;
+using CarRentalManagementMobile.Infrastructure;
+using CarRentalManagementMobile.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarRentalManagement.APIs;
+namespace CarRentalManagementMobile.APIs;
 
 public abstract class UsersServiceBase : IUsersService
 {
-    protected readonly CarRentalManagementDbContext _context;
+    protected readonly CarRentalManagementMobileDbContext _context;
 
-    public UsersServiceBase(CarRentalManagementDbContext context)
+    public UsersServiceBase(CarRentalManagementMobileDbContext context)
     {
         _context = context;
     }
@@ -27,10 +27,7 @@ public abstract class UsersServiceBase : IUsersService
         {
             CreatedAt = createDto.CreatedAt,
             Email = createDto.Email,
-            FirstName = createDto.FirstName,
-            LastName = createDto.LastName,
             Password = createDto.Password,
-            Roles = createDto.Roles,
             UpdatedAt = createDto.UpdatedAt,
             Username = createDto.Username
         };
@@ -38,6 +35,12 @@ public abstract class UsersServiceBase : IUsersService
         if (createDto.Id != null)
         {
             user.Id = createDto.Id;
+        }
+        if (createDto.Role != null)
+        {
+            user.Role = await _context
+                .Roles.Where(role => createDto.Role.Id == role.Id)
+                .FirstOrDefaultAsync();
         }
 
         _context.Users.Add(user);
@@ -74,7 +77,8 @@ public abstract class UsersServiceBase : IUsersService
     public async Task<List<User>> Users(UserFindManyArgs findManyArgs)
     {
         var users = await _context
-            .Users.ApplyWhere(findManyArgs.Where)
+            .Users.Include(x => x.Role)
+            .ApplyWhere(findManyArgs.Where)
             .ApplySkip(findManyArgs.Skip)
             .ApplyTake(findManyArgs.Take)
             .ApplyOrderBy(findManyArgs.SortBy)
@@ -116,6 +120,13 @@ public abstract class UsersServiceBase : IUsersService
     {
         var user = updateDto.ToModel(uniqueId);
 
+        if (updateDto.Role != null)
+        {
+            user.Role = await _context
+                .Roles.Where(role => updateDto.Role == role.Id)
+                .FirstOrDefaultAsync();
+        }
+
         _context.Entry(user).State = EntityState.Modified;
 
         try
@@ -133,5 +144,21 @@ public abstract class UsersServiceBase : IUsersService
                 throw;
             }
         }
+    }
+
+    /// <summary>
+    /// Get a Role record for User
+    /// </summary>
+    public async Task<Role> GetRole(UserWhereUniqueInput uniqueId)
+    {
+        var user = await _context
+            .Users.Where(user => user.Id == uniqueId.Id)
+            .Include(user => user.Role)
+            .FirstOrDefaultAsync();
+        if (user == null)
+        {
+            throw new NotFoundException();
+        }
+        return user.Role.ToDto();
     }
 }

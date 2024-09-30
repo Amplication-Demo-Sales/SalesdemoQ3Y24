@@ -1,10 +1,10 @@
-using CarRentalManagement.APIs;
-using CarRentalManagement.APIs.Common;
-using CarRentalManagement.APIs.Dtos;
-using CarRentalManagement.APIs.Errors;
+using CarRentalManagementMobile.APIs;
+using CarRentalManagementMobile.APIs.Common;
+using CarRentalManagementMobile.APIs.Dtos;
+using CarRentalManagementMobile.APIs.Errors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CarRentalManagement.APIs;
+namespace CarRentalManagementMobile.APIs;
 
 [Route("api/[controller]")]
 [ApiController()]
@@ -102,14 +102,14 @@ public abstract class OrdersControllerBase : ControllerBase
     }
 
     /// <summary>
-    /// Get a Customer record for Order
+    /// Get a OrderItem record for Order
     /// </summary>
-    [HttpGet("{Id}/customer")]
-    public async Task<ActionResult<List<Customer>>> GetCustomer(
+    [HttpGet("{Id}/orderItem")]
+    public async Task<ActionResult<List<OrderItem>>> GetOrderItem(
         [FromRoute()] OrderWhereUniqueInput uniqueId
     )
     {
-        var customer = await _service.GetCustomer(uniqueId);
-        return Ok(customer);
+        var orderItem = await _service.GetOrderItem(uniqueId);
+        return Ok(orderItem);
     }
 }
