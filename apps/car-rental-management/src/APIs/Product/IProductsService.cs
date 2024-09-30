@@ -1,7 +1,7 @@
-using CarRentalManagement.APIs.Common;
-using CarRentalManagement.APIs.Dtos;
+using CarRentalManagementMobile.APIs.Common;
+using CarRentalManagementMobile.APIs.Dtos;
 
-namespace CarRentalManagement.APIs;
+namespace CarRentalManagementMobile.APIs;
 
 public interface IProductsService
 {
@@ -34,4 +34,36 @@ public interface IProductsService
     /// Update one Product
     /// </summary>
     public Task UpdateProduct(ProductWhereUniqueInput uniqueId, ProductUpdateInput updateDto);
+
+    /// <summary>
+    /// Connect multiple OrderItems records to Product
+    /// </summary>
+    public Task ConnectOrderItems(
+        ProductWhereUniqueInput uniqueId,
+        OrderItemWhereUniqueInput[] orderItemsId
+    );
+
+    /// <summary>
+    /// Disconnect multiple OrderItems records from Product
+    /// </summary>
+    public Task DisconnectOrderItems(
+        ProductWhereUniqueInput uniqueId,
+        OrderItemWhereUniqueInput[] orderItemsId
+    );
+
+    /// <summary>
+    /// Find multiple OrderItems records for Product
+    /// </summary>
+    public Task<List<OrderItem>> FindOrderItems(
+        ProductWhereUniqueInput uniqueId,
+        OrderItemFindManyArgs OrderItemFindManyArgs
+    );
+
+    /// <summary>
+    /// Update multiple OrderItems records for Product
+    /// </summary>
+    public Task UpdateOrderItems(
+        ProductWhereUniqueInput uniqueId,
+        OrderItemWhereUniqueInput[] orderItemsId
+    );
 }

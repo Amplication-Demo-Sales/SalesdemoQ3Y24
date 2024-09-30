@@ -1,7 +1,6 @@
 using System.Reflection;
-using CarRentalManagement;
-using CarRentalManagement.Brokers.Mymessagebroker;
-using CarRentalManagement.Infrastructure;
+using CarRentalManagementMobile;
+using CarRentalManagementMobile.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,11 +27,7 @@ builder.Services.AddCors(builder =>
         }
     );
 });
-builder.Services.AddDbContext<CarRentalManagementDbContext>(opt =>
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
-builder.AddMymessagebroker();
-builder.Services.AddDbContext<CarRentalManagementDbContext>(opt =>
+builder.Services.AddDbContext<CarRentalManagementMobileDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 var app = builder.Build();

@@ -1,9 +1,9 @@
-using CarRentalManagement.Infrastructure;
+using CarRentalManagementMobile.Infrastructure;
 
-namespace CarRentalManagement.APIs;
+namespace CarRentalManagementMobile.APIs;
 
 public class ProductsService : ProductsServiceBase
 {
-    public ProductsService(CarRentalManagementDbContext context)
+    public ProductsService(CarRentalManagementMobileDbContext context)
         : base(context) { }
 }

@@ -1,7 +1,7 @@
-using CarRentalManagement.APIs.Common;
-using CarRentalManagement.APIs.Dtos;
+using CarRentalManagementMobile.APIs.Common;
+using CarRentalManagementMobile.APIs.Dtos;
 
-namespace CarRentalManagement.APIs;
+namespace CarRentalManagementMobile.APIs;
 
 public interface IUsersService
 {
@@ -34,4 +34,9 @@ public interface IUsersService
     /// Update one User
     /// </summary>
     public Task UpdateUser(UserWhereUniqueInput uniqueId, UserUpdateInput updateDto);
+
+    /// <summary>
+    /// Get a Role record for User
+    /// </summary>
+    public Task<Role> GetRole(UserWhereUniqueInput uniqueId);
 }

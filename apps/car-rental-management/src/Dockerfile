@@ -25,4 +25,4 @@ WORKDIR /App
 COPY --from=build-env /App/out .
 COPY --from=build-env /App/DbMigrationsBundle ./DbMigrationsBundle
 
-ENTRYPOINT ["dotnet", "car-rental-management.dll"]
+ENTRYPOINT ["dotnet", "car-rental-management-mobile.dll"]

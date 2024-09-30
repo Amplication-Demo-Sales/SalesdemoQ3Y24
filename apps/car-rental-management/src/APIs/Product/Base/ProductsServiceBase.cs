@@ -1,19 +1,19 @@
-using CarRentalManagement.APIs;
-using CarRentalManagement.APIs.Common;
-using CarRentalManagement.APIs.Dtos;
-using CarRentalManagement.APIs.Errors;
-using CarRentalManagement.APIs.Extensions;
-using CarRentalManagement.Infrastructure;
-using CarRentalManagement.Infrastructure.Models;
+using CarRentalManagementMobile.APIs;
+using CarRentalManagementMobile.APIs.Common;
+using CarRentalManagementMobile.APIs.Dtos;
+using CarRentalManagementMobile.APIs.Errors;
+using CarRentalManagementMobile.APIs.Extensions;
+using CarRentalManagementMobile.Infrastructure;
+using CarRentalManagementMobile.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarRentalManagement.APIs;
+namespace CarRentalManagementMobile.APIs;
 
 public abstract class ProductsServiceBase : IProductsService
 {
-    protected readonly CarRentalManagementDbContext _context;
+    protected readonly CarRentalManagementMobileDbContext _context;
 
-    public ProductsServiceBase(CarRentalManagementDbContext context)
+    public ProductsServiceBase(CarRentalManagementMobileDbContext context)
     {
         _context = context;
     }
@@ -29,12 +29,21 @@ public abstract class ProductsServiceBase : IProductsService
             Description = createDto.Description,
             Name = createDto.Name,
             Price = createDto.Price,
+            Stock = createDto.Stock,
             UpdatedAt = createDto.UpdatedAt
         };
 
         if (createDto.Id != null)
         {
             product.Id = createDto.Id;
+        }
+        if (createDto.OrderItems != null)
+        {
+            product.OrderItems = await _context
+                .OrderItems.Where(orderItem =>
+                    createDto.OrderItems.Select(t => t.Id).Contains(orderItem.Id)
+                )
+                .ToListAsync();
         }
 
         _context.Products.Add(product);
@@ -71,7 +80,8 @@ public abstract class ProductsServiceBase : IProductsService
     public async Task<List<Product>> Products(ProductFindManyArgs findManyArgs)
     {
         var products = await _context
-            .Products.ApplyWhere(findManyArgs.Where)
+            .Products.Include(x => x.OrderItems)
+            .ApplyWhere(findManyArgs.Where)
             .ApplySkip(findManyArgs.Skip)
             .ApplyTake(findManyArgs.Take)
             .ApplyOrderBy(findManyArgs.SortBy)
@@ -113,6 +123,15 @@ public abstract class ProductsServiceBase : IProductsService
     {
         var product = updateDto.ToModel(uniqueId);
 
+        if (updateDto.OrderItems != null)
+        {
+            product.OrderItems = await _context
+                .OrderItems.Where(orderItem =>
+                    updateDto.OrderItems.Select(t => t).Contains(orderItem.Id)
+                )
+                .ToListAsync();
+        }
+
         _context.Entry(product).State = EntityState.Modified;
 
         try
@@ -130,5 +149,114 @@ public abstract class ProductsServiceBase : IProductsService
                 throw;
             }
         }
+    }
+
+    /// <summary>
+    /// Connect multiple OrderItems records to Product
+    /// </summary>
+    public async Task ConnectOrderItems(
+        ProductWhereUniqueInput uniqueId,
+        OrderItemWhereUniqueInput[] childrenIds
+    )
+    {
+        var parent = await _context
+            .Products.Include(x => x.OrderItems)
+            .FirstOrDefaultAsync(x => x.Id == uniqueId.Id);
+        if (parent == null)
+        {
+            throw new NotFoundException();
+        }
+
+        var children = await _context
+            .OrderItems.Where(t => childrenIds.Select(x => x.Id).Contains(t.Id))
+            .ToListAsync();
+        if (children.Count == 0)
+        {
+            throw new NotFoundException();
+        }
+
+        var childrenToConnect = children.Except(parent.OrderItems);
+
+        foreach (var child in childrenToConnect)
+        {
+            parent.OrderItems.Add(child);
+        }
+
+        await _context.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Disconnect multiple OrderItems records from Product
+    /// </summary>
+    public async Task DisconnectOrderItems(
+        ProductWhereUniqueInput uniqueId,
+        OrderItemWhereUniqueInput[] childrenIds
+    )
+    {
+        var parent = await _context
+            .Products.Include(x => x.OrderItems)
+            .FirstOrDefaultAsync(x => x.Id == uniqueId.Id);
+        if (parent == null)
+        {
+            throw new NotFoundException();
+        }
+
+        var children = await _context
+            .OrderItems.Where(t => childrenIds.Select(x => x.Id).Contains(t.Id))
+            .ToListAsync();
+
+        foreach (var child in children)
+        {
+            parent.OrderItems?.Remove(child);
+        }
+        await _context.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Find multiple OrderItems records for Product
+    /// </summary>
+    public async Task<List<OrderItem>> FindOrderItems(
+        ProductWhereUniqueInput uniqueId,
+        OrderItemFindManyArgs productFindManyArgs
+    )
+    {
+        var orderItems = await _context
+            .OrderItems.Where(m => m.ProductId == uniqueId.Id)
+            .ApplyWhere(productFindManyArgs.Where)
+            .ApplySkip(productFindManyArgs.Skip)
+            .ApplyTake(productFindManyArgs.Take)
+            .ApplyOrderBy(productFindManyArgs.SortBy)
+            .ToListAsync();
+
+        return orderItems.Select(x => x.ToDto()).ToList();
+    }
+
+    /// <summary>
+    /// Update multiple OrderItems records for Product
+    /// </summary>
+    public async Task UpdateOrderItems(
+        ProductWhereUniqueInput uniqueId,
+        OrderItemWhereUniqueInput[] childrenIds
+    )
+    {
+        var product = await _context
+            .Products.Include(t => t.OrderItems)
+            .FirstOrDefaultAsync(x => x.Id == uniqueId.Id);
+        if (product == null)
+        {
+            throw new NotFoundException();
+        }
+
+        var children = await _context
+            .OrderItems.Where(a => childrenIds.Select(x => x.Id).Contains(a.Id))
+            .ToListAsync();
+
+        if (children.Count == 0)
+        {
+            throw new NotFoundException();
+        }
+
+        product.OrderItems = children;
+        await _context.SaveChangesAsync();
     }
 }

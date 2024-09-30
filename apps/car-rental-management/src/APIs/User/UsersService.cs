@@ -1,9 +1,9 @@
-using CarRentalManagement.Infrastructure;
+using CarRentalManagementMobile.Infrastructure;
 
-namespace CarRentalManagement.APIs;
+namespace CarRentalManagementMobile.APIs;
 
 public class UsersService : UsersServiceBase
 {
-    public UsersService(CarRentalManagementDbContext context)
+    public UsersService(CarRentalManagementMobileDbContext context)
         : base(context) { }
 }

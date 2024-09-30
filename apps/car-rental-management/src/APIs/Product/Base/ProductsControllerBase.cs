@@ -1,10 +1,10 @@
-using CarRentalManagement.APIs;
-using CarRentalManagement.APIs.Common;
-using CarRentalManagement.APIs.Dtos;
-using CarRentalManagement.APIs.Errors;
+using CarRentalManagementMobile.APIs;
+using CarRentalManagementMobile.APIs.Common;
+using CarRentalManagementMobile.APIs.Dtos;
+using CarRentalManagementMobile.APIs.Errors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CarRentalManagement.APIs;
+namespace CarRentalManagementMobile.APIs;
 
 [Route("api/[controller]")]
 [ApiController()]
@@ -96,6 +96,88 @@ public abstract class ProductsControllerBase : ControllerBase
         try
         {
             await _service.UpdateProduct(uniqueId, productUpdateDto);
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Connect multiple OrderItems records to Product
+    /// </summary>
+    [HttpPost("{Id}/orderItems")]
+    public async Task<ActionResult> ConnectOrderItems(
+        [FromRoute()] ProductWhereUniqueInput uniqueId,
+        [FromQuery()] OrderItemWhereUniqueInput[] orderItemsId
+    )
+    {
+        try
+        {
+            await _service.ConnectOrderItems(uniqueId, orderItemsId);
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Disconnect multiple OrderItems records from Product
+    /// </summary>
+    [HttpDelete("{Id}/orderItems")]
+    public async Task<ActionResult> DisconnectOrderItems(
+        [FromRoute()] ProductWhereUniqueInput uniqueId,
+        [FromBody()] OrderItemWhereUniqueInput[] orderItemsId
+    )
+    {
+        try
+        {
+            await _service.DisconnectOrderItems(uniqueId, orderItemsId);
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Find multiple OrderItems records for Product
+    /// </summary>
+    [HttpGet("{Id}/orderItems")]
+    public async Task<ActionResult<List<OrderItem>>> FindOrderItems(
+        [FromRoute()] ProductWhereUniqueInput uniqueId,
+        [FromQuery()] OrderItemFindManyArgs filter
+    )
+    {
+        try
+        {
+            return Ok(await _service.FindOrderItems(uniqueId, filter));
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+    }
+
+    /// <summary>
+    /// Update multiple OrderItems records for Product
+    /// </summary>
+    [HttpPatch("{Id}/orderItems")]
+    public async Task<ActionResult> UpdateOrderItems(
+        [FromRoute()] ProductWhereUniqueInput uniqueId,
+        [FromBody()] OrderItemWhereUniqueInput[] orderItemsId
+    )
+    {
+        try
+        {
+            await _service.UpdateOrderItems(uniqueId, orderItemsId);
         }
         catch (NotFoundException)
         {

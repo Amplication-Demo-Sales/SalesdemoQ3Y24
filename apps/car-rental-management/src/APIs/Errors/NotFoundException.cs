@@ -1,4 +1,4 @@
-namespace CarRentalManagement.APIs.Errors;
+namespace CarRentalManagementMobile.APIs.Errors;
 
 public class NotFoundException : Exception
 {

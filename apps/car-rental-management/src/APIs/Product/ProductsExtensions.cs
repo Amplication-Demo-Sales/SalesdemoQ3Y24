@@ -1,7 +1,7 @@
-using CarRentalManagement.APIs.Dtos;
-using CarRentalManagement.Infrastructure.Models;
+using CarRentalManagementMobile.APIs.Dtos;
+using CarRentalManagementMobile.Infrastructure.Models;
 
-namespace CarRentalManagement.APIs.Extensions;
+namespace CarRentalManagementMobile.APIs.Extensions;
 
 public static class ProductsExtensions
 {
@@ -13,7 +13,9 @@ public static class ProductsExtensions
             Description = model.Description,
             Id = model.Id,
             Name = model.Name,
+            OrderItems = model.OrderItems?.Select(x => x.Id).ToList(),
             Price = model.Price,
+            Stock = model.Stock,
             UpdatedAt = model.UpdatedAt,
         };
     }
@@ -28,7 +30,8 @@ public static class ProductsExtensions
             Id = uniqueId.Id,
             Description = updateDto.Description,
             Name = updateDto.Name,
-            Price = updateDto.Price
+            Price = updateDto.Price,
+            Stock = updateDto.Stock
         };
 
         if (updateDto.CreatedAt != null)

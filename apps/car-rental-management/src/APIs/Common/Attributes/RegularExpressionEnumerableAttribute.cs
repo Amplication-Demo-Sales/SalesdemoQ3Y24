@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
-namespace CarRentalManagement.APIs.Common.Attributes;
+namespace CarRentalManagementMobile.APIs.Common.Attributes;
 
 public class RegularExpressionEnumerable : RegularExpressionAttribute
 {

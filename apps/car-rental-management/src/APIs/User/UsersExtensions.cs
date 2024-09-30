@@ -1,7 +1,7 @@
-using CarRentalManagement.APIs.Dtos;
-using CarRentalManagement.Infrastructure.Models;
+using CarRentalManagementMobile.APIs.Dtos;
+using CarRentalManagementMobile.Infrastructure.Models;
 
-namespace CarRentalManagement.APIs.Extensions;
+namespace CarRentalManagementMobile.APIs.Extensions;
 
 public static class UsersExtensions
 {
@@ -11,11 +11,9 @@ public static class UsersExtensions
         {
             CreatedAt = model.CreatedAt,
             Email = model.Email,
-            FirstName = model.FirstName,
             Id = model.Id,
-            LastName = model.LastName,
             Password = model.Password,
-            Roles = model.Roles,
+            Role = model.RoleId,
             UpdatedAt = model.UpdatedAt,
             Username = model.Username,
         };
@@ -27,29 +25,21 @@ public static class UsersExtensions
         {
             Id = uniqueId.Id,
             Email = updateDto.Email,
-            FirstName = updateDto.FirstName,
-            LastName = updateDto.LastName
+            Password = updateDto.Password,
+            Username = updateDto.Username
         };
 
         if (updateDto.CreatedAt != null)
         {
             user.CreatedAt = updateDto.CreatedAt.Value;
         }
-        if (updateDto.Password != null)
+        if (updateDto.Role != null)
         {
-            user.Password = updateDto.Password;
-        }
-        if (updateDto.Roles != null)
-        {
-            user.Roles = updateDto.Roles;
+            user.RoleId = updateDto.Role;
         }
         if (updateDto.UpdatedAt != null)
         {
             user.UpdatedAt = updateDto.UpdatedAt.Value;
-        }
-        if (updateDto.Username != null)
-        {
-            user.Username = updateDto.Username;
         }
 
         return user;

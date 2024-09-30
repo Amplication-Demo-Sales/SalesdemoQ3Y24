@@ -1,4 +1,4 @@
-namespace CarRentalManagement.APIs.Dtos;
+namespace CarRentalManagementMobile.APIs.Dtos;
 
 public class Product
 {
@@ -10,7 +10,11 @@ public class Product
 
     public string? Name { get; set; }
 
+    public List<string>? OrderItems { get; set; }
+
     public double? Price { get; set; }
+
+    public int? Stock { get; set; }
 
     public DateTime UpdatedAt { get; set; }
 }

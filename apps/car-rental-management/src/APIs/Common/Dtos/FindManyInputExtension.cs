@@ -1,6 +1,6 @@
 using System.Linq.Dynamic.Core;
 
-namespace CarRentalManagement.APIs.Common;
+namespace CarRentalManagementMobile.APIs.Common;
 
 public static class FindManyInputExtension
 {
