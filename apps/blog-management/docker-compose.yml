@@ -12,6 +12,9 @@ services:
     restart: on-failure
     profiles:
       - complete
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
   migrate:
     build:
       context: ./src
@@ -28,6 +31,8 @@ services:
     ports:
       - 5432:5432
     environment:
+      MSSQL_SA_PASSWORD: SqlAdminChangeMe1234!
+      ACCEPT_EULA: Y
       POSTGRES_DB: postgres
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
@@ -35,9 +40,21 @@ services:
       test:
         - CMD-SHELL
         - pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}
+        - -S
+        - localhost
+        - -U
+        - sa
+        - -P
+        - SqlAdminChangeMe1234!
+        - -Q
+        - SELECT 1
+        - -b
+        - -o
+        - /dev/null
       timeout: 5s
       interval: 10s
       retries: 10
       start_period: 10s
 volumes:
+  mssql: ~
   postgres: ~
